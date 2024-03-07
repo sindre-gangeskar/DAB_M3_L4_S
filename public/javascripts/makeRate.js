@@ -1,6 +1,10 @@
 async function makeRate(userId, url) {
     let value = prompt("Rate the hotel from 1 to 5")
-    const response = await fetch(url, {
+    if (value < 1 || value > 5) {
+        alert('Incorrect value');
+        return;
+    }
+    await fetch(url, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
@@ -9,8 +13,17 @@ async function makeRate(userId, url) {
             UserId: userId,
             Value: value
         })
-    });
-    const resData = 'Made a rate';
-    location.reload()
-    return resData;
+    }).then((response) => {
+        if (response.ok) {
+            const resData = 'Made a rate';
+            alert(resData);
+            location.reload()
+            return Promise.resolve(resData);
+        }
+        return Promise.reject(response);
+    })
+        .catch((response) => {
+            console.log(response);
+            alert(response.statusText);
+        });
 }

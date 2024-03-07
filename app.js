@@ -13,8 +13,9 @@ var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var hotelsRouter = require('./routes/hotels');
 var roomsRouter = require('./routes/rooms');
-
+var startRouter = require('./routes/start');
 var db = require("./models");
+const { start } = require('repl');
 db.sequelize.sync({ force: false })
 
 var app = express();
@@ -42,7 +43,7 @@ app.use('/', authRouter);
 app.use('/users', usersRouter);
 app.use('/hotels', hotelsRouter);
 app.use('/rooms', roomsRouter);
-
+app.use('/start', startRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

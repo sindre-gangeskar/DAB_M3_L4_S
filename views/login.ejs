@@ -12,7 +12,8 @@
 </head>
 
 <body>
-	<%-include('./partials/navbar.ejs')%>
+	<%-include('./partials/navbar.ejs', {userId: userId})%>
+	<% if (!username) {%>
 	<section class="prompt">
 		<h3>Hotel Booking</h3>
 		<h2>Login</h2>
@@ -30,7 +31,19 @@
 		<hr>
 		<p class="help">Don't have an account? <a href="/signup">Sign up</a></p>
 	</section>
-
+	<% } else {%>
+	<section class="prompt">
+		<h3>Hotel Booking</h3>
+			<section class="text-center">
+				<h5>Hi,  <%= username %>! </h5>
+				<p>You're already logged in.</p>
+				<hr>
+			</section>
+			<form action="/logout" method="POST">
+				<button type="submit" class="btn btn-danger">Sign out</button>
+			</form>
+	</section>
+		<% } %>
 <%-include('./partials/footer.ejs')%>
 </body>
 

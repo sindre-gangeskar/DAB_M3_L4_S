@@ -1,3 +1,4 @@
+const { sequelize } = require('../models');
 class RoomService {
     constructor(db) {
         this.client = db.sequelize;
@@ -9,10 +10,10 @@ class RoomService {
         return this.Room.create(
             {
                 Capacity: capacity,
-                PricePerDay: pricePerDay, 
+                PricePerDay: pricePerDay,
                 HotelId: hotelId
             }
-        ) 
+        )
     }
     async get() {
         return this.Room.findAll({
@@ -30,21 +31,24 @@ class RoomService {
 
     async deleteRoom(roomId) {
         return this.Room.destroy({
-            where: {id: roomId}
+            where: { id: roomId }
         })
     }
 
     async rentARoom(userId, roomId, startDate, endDate) {
-        return this.Reservation.create(
+        sequelize.query('CALL insert_reservation(:UserId, :RoomId, :StartDate, :EndDate)', {
+            replacements:
             {
                 RoomId: roomId,
                 UserId: userId,
                 StartDate: startDate,
                 EndDate: endDate
             }
-        ).catch(function (err) {
-            console.log(err);
-        });
+        }).then(result => {
+            return result
+        }).catch(err => {
+            return (err)
+        })
     }
 }
 module.exports = RoomService;
