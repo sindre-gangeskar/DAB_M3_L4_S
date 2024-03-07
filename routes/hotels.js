@@ -15,12 +15,20 @@ router.get('/', async function (req, res, next) {
   const username = req.user?.username ?? 'Guest';
   const hotels = await hotelService.get();
 
+  if (req.query.location != null) {
+    let hotels = await hotelService.get();
+    hotels = hotels.includes(hotel => hotel.Location.toLowerCase() == req.query.location.toLowerCase());
 
-  if (req.query.location) {
-    hotels = hotels.filter(hotel => hotel.location.toLowerCase() == req.query.location.toLowerCase());
-}
-  res.render('hotels', { hotels: hotels, userId, isAdmin, username, user: req.user });
+    if (hotels.length > 0) {
+      res.render('hotels', { hotels: hotels, userId, isAdmin, username, user: req.user });
+    }
+  }
+
+  else {
+    res.render('hotels', { hotels: hotels, userId, isAdmin, username, user: req.user });
+  }
 });
+
 
 router.get('/:hotelId', async function (req, res, next) {
   const userId = req.user?.id ?? 0;
